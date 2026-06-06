@@ -1,0 +1,20 @@
+{
+  "name": "gov-green-channel",
+  "version": "1.0.0",
+  "description": "政务绿色通道材料受理系统",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "serve": "npx serve -l 8080",
+    "test:page-check": "node tests/page-check.js",
+    "test:required-missing": "node tests/scenarios/required-missing.test.js",
+    "test:tolerable-expired": "node tests/scenarios/tolerable-expired.test.js",
+    "test:all": "npm run test:page-check && npm run test:required-missing && npm run test:tolerable-expired",
+    "docker:build": "docker build -t gov-green-channel .",
+    "docker:run": "docker run -p 8080:80 --name gov-green-channel gov-green-channel",
+    "docker:stop": "docker stop gov-green-channel && docker rm gov-green-channel"
+  },
+  "devDependencies": {
+    "puppeteer": "^22.0.0",
+    "serve": "^14.2.1"
+  }
+}

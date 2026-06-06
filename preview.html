@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>群众预审 - 政务绿色通道材料受理系统</title>
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="app-logo">
+        <span class="app-logo-icon">🏛️</span>
+        <span class="app-logo-title">政务绿色通道材料预审</span>
+      </div>
+      <nav class="app-nav">
+        <button class="nav-btn" data-page="acceptance">窗口受理</button>
+        <button class="nav-btn" data-page="admin">事项管理</button>
+        <button class="nav-btn active" data-page="preview">群众预审</button>
+      </nav>
+    </header>
+
+    <main class="app-main">
+      <div class="preview-panel">
+        <div id="preview-step-1">
+          <div class="applicant-form">
+            <h3 style="margin-bottom: 24px; text-align: center;">请选择办理事项</h3>
+            <div id="preview-item-list"></div>
+          </div>
+        </div>
+        
+        <div id="preview-step-2" class="hidden">
+          <div class="applicant-form">
+            <h3 style="margin-bottom: 24px; text-align: center;">填写基本信息</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">申请人姓名</label>
+                <input type="text" class="form-input" id="previewApplicantName" placeholder="请输入申请人姓名">
+              </div>
+              <div class="form-group">
+                <label class="form-label">身份证号</label>
+                <input type="text" class="form-input" id="previewApplicantId" placeholder="请输入身份证号">
+              </div>
+              <div class="form-group">
+                <label class="form-label">联系电话</label>
+                <input type="text" class="form-input" id="previewApplicantPhone" placeholder="请输入联系电话">
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: 24px;">
+              <button class="btn btn-secondary" id="btnBackStep1">返回</button>
+              <button class="btn btn-primary" id="btnNextStep2">下一步</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="preview-step-3" class="hidden">
+          <div class="applicant-form">
+            <h3 style="margin-bottom: 24px; text-align: center;">材料清单</h3>
+            <div id="preview-material-list"></div>
+            <div style="text-align: center; margin-top: 24px;">
+              <button class="btn btn-secondary" id="btnBackStep2">返回</button>
+              <button class="btn btn-primary" id="btnPreviewResult">查看预审结果</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="preview-result" class="hidden"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/utils/uuid.js"></script>
+  <script src="js/utils/date.js"></script>
+  <script src="js/utils/validator.js"></script>
+  <script src="js/models/Priority.js"></script>
+  <script src="js/models/Item.js"></script>
+  <script src="js/models/Material.js"></script>
+  <script src="js/models/Application.js"></script>
+  <script src="js/services/StorageService.js"></script>
+  <script src="js/services/AcceptanceService.js"></script>
+  <script src="js/services/CountdownService.js"></script>
+  <script src="js/services/DuplicateCheckService.js"></script>
+  <script src="js/components/Modal.js"></script>
+  <script src="js/pages/preview.js"></script>
+</body>
+</html>
