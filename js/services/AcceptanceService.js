@@ -29,12 +29,15 @@ class AcceptanceService {
     
     tolerableMaterials.forEach(mat => {
       const appMat = appMaterials.find(am => am.materialId === mat.id);
-      if (appMat && appMat.status === 'tolerated' && appMat.tolerateDeadline) {
-        const deadline = new Date(appMat.tolerateDeadline);
-        if (deadline < now) {
-          hasExpiredTolerable = true;
-        } else {
-          hasValidTolerable = true;
+      if (appMat && appMat.tolerateDeadline) {
+        const isNotUploaded = appMat.status !== 'uploaded' && appMat.status !== 'supplemented';
+        if (isNotUploaded) {
+          const deadline = new Date(appMat.tolerateDeadline);
+          if (deadline < now) {
+            hasExpiredTolerable = true;
+          } else {
+            hasValidTolerable = true;
+          }
         }
       }
     });
@@ -89,7 +92,7 @@ class AcceptanceService {
       materials: materials.map(m => ({
         materialId: m.id,
         status: 'not_uploaded',
-        tolerateDeadline: m.isTolerable ? addDays(now, m.tolerateDays || 3).toISOString() : null,
+        tolerateDeadline: m.type === 'tolerable' ? addDays(now, m.tolerateDays || 3).toISOString() : null,
         uploadTime: null
       })),
       deadline: deadline.toISOString(),

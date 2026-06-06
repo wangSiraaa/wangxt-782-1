@@ -54,7 +54,6 @@ class MaterialList {
     const appMat = this.application?.materials?.find(m => m.materialId === material.id);
     const status = appMat?.status || 'not_uploaded';
     const isUploaded = status === 'uploaded' || status === 'supplemented';
-    const isTolerated = status === 'tolerated';
     
     let deadlineHtml = '';
     if (material.type === 'tolerable' && appMat?.tolerateDeadline) {
@@ -76,8 +75,13 @@ class MaterialList {
       `;
     }
     
+    let displayStatus = status;
+    if (material.type === 'tolerable' && !isUploaded) {
+      displayStatus = 'tolerated';
+    }
+    
     return `
-      <div class="material-item ${status}" data-material-id="${material.id}">
+      <div class="material-item ${displayStatus}" data-material-id="${material.id}">
         <div class="material-check">
           <label class="checkbox-wrapper">
             <input type="checkbox" 
@@ -91,11 +95,11 @@ class MaterialList {
         <div class="material-info">
           <div class="material-name">${material.name}</div>
           <div class="material-desc">${material.description || ''}</div>
-          ${material.type === 'tolerated' ? '<div class="material-tolerate-tag">容缺</div>' : ''}
+          ${material.type === 'tolerable' ? '<div class="material-tolerate-tag">容缺</div>' : ''}
           ${deadlineHtml}
         </div>
         <div class="material-status">
-          ${this.getStatusBadge(status)}
+          ${this.getStatusBadge(material.type === 'tolerable' && !isUploaded ? 'tolerated' : status)}
         </div>
       </div>
     `;
@@ -145,6 +149,7 @@ class MaterialList {
     
     this.onMaterialChange(this.application);
     this.render();
+    this.startCountdowns();
   }
 
   updateMaterialDeadline(materialId, deadline) {
@@ -157,28 +162,34 @@ class MaterialList {
     
     this.onDeadlineChange(this.application);
     this.render();
+    this.startCountdowns();
   }
 
   startCountdowns() {
     if (!this.application) return;
     
+    countdownService.stopAll();
+    
     this.application.materials.forEach(mat => {
-      if (mat.tolerateDeadline && mat.status === 'tolerated') {
-        const countdownEl = this.container.querySelector(`[data-countdown-id="mat-${mat.materialId}"]`);
-        if (countdownEl) {
-          countdownService.startCountdown(
-            `mat-${mat.materialId}`,
-            mat.tolerateDeadline,
-            (remaining) => {
-              countdownEl.textContent = formatCountdown(remaining);
-              countdownEl.className = `deadline-countdown ${remaining.expired ? 'expired' : ''}`;
-            },
-            () => {
-              countdownEl.textContent = '已过期';
-              countdownEl.classList.add('expired');
-              this.onDeadlineChange(this.application);
-            }
-          );
+      if (mat.tolerateDeadline) {
+        const isNotUploaded = mat.status !== 'uploaded' && mat.status !== 'supplemented';
+        if (isNotUploaded) {
+          const countdownEl = this.container.querySelector(`[data-countdown-id="mat-${mat.materialId}"]`);
+          if (countdownEl) {
+            countdownService.startCountdown(
+              `mat-${mat.materialId}`,
+              mat.tolerateDeadline,
+              (remaining) => {
+                countdownEl.textContent = formatCountdown(remaining);
+                countdownEl.className = `deadline-countdown ${remaining.expired ? 'expired' : ''}`;
+              },
+              () => {
+                countdownEl.textContent = '已过期';
+                countdownEl.classList.add('expired');
+                this.onDeadlineChange(this.application);
+              }
+            );
+          }
         }
       }
     });
