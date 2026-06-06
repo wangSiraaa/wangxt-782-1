@@ -5,6 +5,7 @@ class MaterialList {
     this.application = null;
     this.onMaterialChange = options.onMaterialChange || (() => {});
     this.onDeadlineChange = options.onDeadlineChange || (() => {});
+    this.onMaterialModelingReason = options.onMaterialModelingReason || (() => {});
     this.editable = options.editable !== false;
   }
 
@@ -93,7 +94,12 @@ class MaterialList {
           </label>
         </div>
         <div class="material-info">
-          <div class="material-name">${material.name}</div>
+          <div class="material-name">
+            ${material.name}
+            ${material.modelingReason ? `
+              <button class="material-info-btn" data-material-id="${material.id}" title="查看建模说明">ℹ️</button>
+            ` : ''}
+          </div>
           <div class="material-desc">${material.description || ''}</div>
           ${material.type === 'tolerable' ? '<div class="material-tolerate-tag">容缺</div>' : ''}
           ${deadlineHtml}
@@ -134,22 +140,106 @@ class MaterialList {
         this.updateMaterialDeadline(materialId, newDate);
       });
     });
+
+    const infoBtns = this.container.querySelectorAll('.material-info-btn');
+    infoBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const materialId = e.target.dataset.materialId;
+        this.showMaterialModelingReason(materialId);
+      });
+    });
   }
 
   updateMaterialStatus(materialId, status) {
     if (!this.application) return;
     
+    const materials = StorageService.getMaterialsByItemId(this.itemId);
+    const material = materials.find(m => m.id === materialId);
+    
     const matIndex = this.application.materials.findIndex(m => m.materialId === materialId);
     if (matIndex !== -1) {
+      const oldStatus = this.application.materials[matIndex].status;
       this.application.materials[matIndex].status = status;
       if (status === 'uploaded') {
         this.application.materials[matIndex].uploadTime = new Date().toISOString();
+      }
+
+      if (material && material.modelingReason && status !== oldStatus) {
+        this.showMaterialChangeTip(material, status);
       }
     }
     
     this.onMaterialChange(this.application);
     this.render();
     this.startCountdowns();
+  }
+
+  showMaterialChangeTip(material, status) {
+    const statusText = status === 'uploaded' ? '已上传' : '未上传';
+    Modal.alert(
+      `
+        <div style="text-align: left;">
+          <p><strong>材料名称：</strong>${material.name}</p>
+          <p><strong>材料类型：</strong>${material.type === 'required' ? '必填' : '可容缺'}</p>
+          <p><strong>当前状态：</strong>${statusText}</p>
+          <hr style="margin: 10px 0;">
+          <p><strong>材料建模原因：</strong></p>
+          <p style="background: #f0f7ff; padding: 10px; border-left: 3px solid #428bca; margin: 0;">
+            ${material.modelingReason}
+          </p>
+        </div>
+      `,
+      '材料状态变更提示'
+    );
+  }
+
+  showMaterialModelingReason(materialId) {
+    const materials = StorageService.getMaterialsByItemId(this.itemId);
+    const material = materials.find(m => m.id === materialId);
+    if (!material) return;
+
+    const appMat = this.application?.materials?.find(m => m.materialId === materialId);
+    const status = appMat?.status || 'not_uploaded';
+    const statusText = {
+      'not_uploaded': '未上传',
+      'uploaded': '已上传',
+      'supplemented': '已补件'
+    }[status] || '未知';
+
+    Modal.alert(
+      `
+        <div style="text-align: left;">
+          <h4 style="margin-top: 0;">材料基本信息</h4>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+            <tr>
+              <td style="padding: 5px; border: 1px solid #ddd; width: 30%;"><strong>材料名称</strong></td>
+              <td style="padding: 5px; border: 1px solid #ddd;">${material.name}</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px; border: 1px solid #ddd;"><strong>材料类型</strong></td>
+              <td style="padding: 5px; border: 1px solid #ddd;">${material.type === 'required' ? '必填' : '可容缺'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 5px; border: 1px solid #ddd;"><strong>当前状态</strong></td>
+              <td style="padding: 5px; border: 1px solid #ddd;">${statusText}</td>
+            </tr>
+            ${material.type === 'tolerable' ? `
+              <tr>
+                <td style="padding: 5px; border: 1px solid #ddd;"><strong>容缺期限</strong></td>
+                <td style="padding: 5px; border: 1px solid #ddd;">${material.tolerateDays} 个工作日</td>
+              </tr>
+            ` : ''}
+          </table>
+
+          <h4>材料建模原因</h4>
+          <p style="background: #f0f7ff; padding: 10px; border-left: 3px solid #428bca; margin: 0;">
+            ${material.modelingReason || '暂无建模说明'}
+          </p>
+        </div>
+      `,
+      '材料建模说明'
+    );
   }
 
   updateMaterialDeadline(materialId, deadline) {

@@ -1,14 +1,21 @@
 let itemList;
 let materialList;
 let acceptanceInfo;
+let printList;
 let currentApplication = null;
 let currentItem = null;
 
-function init() {
-  StorageService.initDefaultData();
+async function init() {
+  try {
+    await StorageService.loadSeedData('seed-782.json');
+  } catch (e) {
+    console.warn('加载 seed 数据失败，使用默认数据');
+    StorageService.initDefaultData();
+  }
   
   itemList = new ItemList('itemListContainer', {
-    onSelect: handleItemSelect
+    onSelect: handleItemSelect,
+    onSelectError: handleItemSelectError
   });
   
   materialList = new MaterialList('materialListContainer', {
@@ -17,6 +24,11 @@ function init() {
   });
   
   acceptanceInfo = new AcceptanceInfo('acceptanceInfoContainer');
+  
+  printList = new PrintList({
+    onBeforePrint: handleBeforePrint,
+    onAfterPrint: handleAfterPrint
+  });
   
   itemList.render();
   bindEvents();
@@ -74,6 +86,7 @@ function updateStatus() {
 function bindEvents() {
   document.getElementById('btnReset').addEventListener('click', handleReset);
   document.getElementById('btnSave').addEventListener('click', handleSave);
+  document.getElementById('btnPrint').addEventListener('click', handlePrint);
   document.getElementById('btnAccept').addEventListener('click', handleAccept);
   
   document.getElementById('applicantName').addEventListener('change', updateApplicationInfo);
@@ -83,6 +96,29 @@ function bindEvents() {
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', handleNavClick);
   });
+}
+
+function handleItemSelectError(error) {
+  Modal.alert(
+    `事项类型选择失败：${error.message}<br><br>已保留当前输入信息，请重新选择事项类型。`,
+    '操作提示'
+  );
+}
+
+function handleBeforePrint(item, application) {
+  console.log('准备打印材料清单:', item?.name);
+}
+
+function handleAfterPrint(item, application) {
+  console.log('材料清单打印完成:', item?.name);
+}
+
+function handlePrint() {
+  if (!currentItem || !currentApplication) {
+    Modal.alert('请先选择事项类型并填写申请信息', '提示');
+    return;
+  }
+  printList.printPreview(currentItem, currentApplication);
 }
 
 function updateApplicationInfo() {

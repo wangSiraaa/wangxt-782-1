@@ -1,0 +1,334 @@
+{
+  "seedVersion": "1.0.0",
+  "seedId": "seed-782",
+  "seedName": "绿色通道材料屏样例数据",
+  "generateTime": "2026-06-06T00:00:00.000Z",
+  "businessNumbers": [
+    {
+      "businessType": "item",
+      "prefix": "ITEM",
+      "count": 5,
+      "numbers": []
+    },
+    {
+      "businessType": "material",
+      "prefix": "MAT",
+      "count": 12,
+      "numbers": []
+    },
+    {
+      "businessType": "application",
+      "prefix": "APP",
+      "count": 3,
+      "numbers": []
+    }
+  ],
+  "priorityRules": [
+    {
+      "level": "red",
+      "label": "紧急",
+      "color": "#d9534f",
+      "showCountdown": true,
+      "sortOrder": 1,
+      "reason": "紧急事项需立即处理，强制显示倒计时提醒办理时限"
+    },
+    {
+      "level": "orange",
+      "label": "较紧急",
+      "color": "#f0ad4e",
+      "showCountdown": false,
+      "sortOrder": 2,
+      "reason": "较紧急事项需优先处理，但不强制倒计时"
+    },
+    {
+      "level": "yellow",
+      "label": "普通",
+      "color": "#5bc0de",
+      "showCountdown": false,
+      "sortOrder": 3,
+      "reason": "普通事项按正常流程办理"
+    },
+    {
+      "level": "green",
+      "label": "可延后",
+      "color": "#5cb85c",
+      "showCountdown": false,
+      "sortOrder": 4,
+      "reason": "可延后事项优先级最低，可延后办理"
+    }
+  ],
+  "items": [
+    {
+      "id": "seed-item-001",
+      "name": "营业执照办理",
+      "code": "YYZZ-001",
+      "priority": "red",
+      "timeLimit": 4,
+      "description": "工商营业执照新办/变更/注销",
+      "modelingReason": "营业执照属于市场主体准入核心事项，办理时限短、优先级高，需围绕材料清单、缺失项、办理时限建模"
+    },
+    {
+      "id": "seed-item-002",
+      "name": "社保登记",
+      "code": "SBDJ-001",
+      "priority": "orange",
+      "timeLimit": 8,
+      "description": "社会保险参保登记",
+      "modelingReason": "社保登记关系民生保障，材料容缺空间较大，需围绕材料清单、缺失项、容缺期限建模"
+    },
+    {
+      "id": "seed-item-003",
+      "name": "不动产权证办理",
+      "code": "BDCQZ-001",
+      "priority": "yellow",
+      "timeLimit": 24,
+      "description": "不动产权利证书办理",
+      "modelingReason": "不动产权证办理材料复杂、办理时限长，需围绕材料清单、缺失项、优先级建模"
+    },
+    {
+      "id": "seed-item-004",
+      "name": "税务登记",
+      "code": "SWDJ-001",
+      "priority": "orange",
+      "timeLimit": 12,
+      "description": "税务设立/变更/注销登记",
+      "modelingReason": "税务登记涉及财税监管，材料审核严格，需围绕材料清单、缺失项建模"
+    },
+    {
+      "id": "seed-item-005",
+      "name": "公章刻制备案",
+      "code": "GZKB-001",
+      "priority": "green",
+      "timeLimit": 48,
+      "description": "企业公章刻制与公安备案",
+      "modelingReason": "公章刻制备案流程相对简单，优先级较低，需围绕材料清单、办理时限建模"
+    }
+  ],
+  "materials": [
+    {
+      "id": "seed-mat-001",
+      "name": "身份证原件",
+      "type": "required",
+      "itemId": "seed-item-001",
+      "description": "申请人身份证",
+      "tolerateDays": 0,
+      "modelingReason": "身份证是身份核验的核心材料，属于必填项，不允许容缺"
+    },
+    {
+      "id": "seed-mat-002",
+      "name": "申请表",
+      "type": "required",
+      "itemId": "seed-item-001",
+      "description": "工商登记申请表",
+      "tolerateDays": 0,
+      "modelingReason": "申请表是业务办理的基础依据，属于必填项，不允许容缺"
+    },
+    {
+      "id": "seed-mat-003",
+      "name": "经营场所证明",
+      "type": "tolerable",
+      "itemId": "seed-item-001",
+      "description": "房产证或租赁合同",
+      "tolerateDays": 3,
+      "modelingReason": "经营场所证明可后续补充，属于可容缺材料，容缺期限3天"
+    },
+    {
+      "id": "seed-mat-004",
+      "name": "章程",
+      "type": "tolerable",
+      "itemId": "seed-item-001",
+      "description": "公司章程",
+      "tolerateDays": 5,
+      "modelingReason": "公司章程可后续完善，属于可容缺材料，容缺期限5天"
+    },
+    {
+      "id": "seed-mat-005",
+      "name": "身份证",
+      "type": "required",
+      "itemId": "seed-item-002",
+      "description": "参保人身份证",
+      "tolerateDays": 0,
+      "modelingReason": "身份证是社保参保人身份核验核心材料，必填项"
+    },
+    {
+      "id": "seed-mat-006",
+      "name": "劳动合同",
+      "type": "required",
+      "itemId": "seed-item-002",
+      "description": "用人单位劳动合同",
+      "tolerateDays": 0,
+      "modelingReason": "劳动合同是劳动关系证明核心材料，必填项"
+    },
+    {
+      "id": "seed-mat-007",
+      "name": "营业执照复印件",
+      "type": "tolerable",
+      "itemId": "seed-item-002",
+      "description": "单位营业执照",
+      "tolerateDays": 2,
+      "modelingReason": "营业执照复印件可后续补充，容缺期限2天"
+    },
+    {
+      "id": "seed-mat-008",
+      "name": "申请人身份证明",
+      "type": "required",
+      "itemId": "seed-item-003",
+      "description": "身份证等有效证件",
+      "tolerateDays": 0,
+      "modelingReason": "申请人身份证明是不动产登记身份核验核心材料，必填项"
+    },
+    {
+      "id": "seed-mat-009",
+      "name": "不动产权属来源证明",
+      "type": "required",
+      "itemId": "seed-item-003",
+      "description": "购房合同、土地证明等",
+      "tolerateDays": 0,
+      "modelingReason": "权属来源证明是不动产权属认定核心依据，必填项"
+    },
+    {
+      "id": "seed-mat-010",
+      "name": "完税证明",
+      "type": "tolerable",
+      "itemId": "seed-item-003",
+      "description": "相关税费缴纳证明",
+      "tolerateDays": 7,
+      "modelingReason": "完税证明可在税费缴纳后补充，容缺期限7天"
+    },
+    {
+      "id": "seed-mat-011",
+      "name": "营业执照",
+      "type": "required",
+      "itemId": "seed-item-004",
+      "description": "工商营业执照",
+      "tolerateDays": 0,
+      "modelingReason": "营业执照是税务登记的主体资格证明，必填项"
+    },
+    {
+      "id": "seed-mat-012",
+      "name": "法人代表身份证",
+      "type": "required",
+      "itemId": "seed-item-005",
+      "description": "企业法定代表人身份证",
+      "tolerateDays": 0,
+      "modelingReason": "法人代表身份证是公章备案的身份核验材料，必填项"
+    }
+  ],
+  "missingItems": [
+    {
+      "itemId": "seed-item-001",
+      "materialId": "seed-mat-003",
+      "missingType": "tolerable",
+      "reason": "经营场所证明正在办理中，承诺3个工作日内补齐",
+      "deadline": "2026-06-09T17:00:00.000Z"
+    },
+    {
+      "itemId": "seed-item-001",
+      "materialId": "seed-mat-004",
+      "missingType": "tolerable",
+      "reason": "公司章程正在修订中，承诺5个工作日内补齐",
+      "deadline": "2026-06-11T17:00:00.000Z"
+    },
+    {
+      "itemId": "seed-item-003",
+      "materialId": "seed-mat-010",
+      "missingType": "tolerable",
+      "reason": "税费正在缴纳中，承诺7个工作日内补齐完税证明",
+      "deadline": "2026-06-13T17:00:00.000Z"
+    }
+  ],
+  "applications": [
+    {
+      "id": "seed-app-001",
+      "itemId": "seed-item-001",
+      "applicantName": "张三",
+      "applicantId": "110101199001011234",
+      "applicantPhone": "13800138001",
+      "materials": [
+        {
+          "materialId": "seed-mat-001",
+          "status": "uploaded",
+          "uploadTime": "2026-06-06T09:00:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-002",
+          "status": "uploaded",
+          "uploadTime": "2026-06-06T09:05:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-003",
+          "status": "not_uploaded",
+          "tolerateDeadline": "2026-06-09T17:00:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-004",
+          "status": "not_uploaded",
+          "tolerateDeadline": "2026-06-11T17:00:00.000Z"
+        }
+      ],
+      "status": "green_channel",
+      "createTime": "2026-06-06T09:10:00.000Z",
+      "deadline": "2026-06-06T13:00:00.000Z",
+      "priority": "red",
+      "remark": "绿色通道办理，容缺材料需在承诺期限内补齐"
+    },
+    {
+      "id": "seed-app-002",
+      "itemId": "seed-item-002",
+      "applicantName": "李四",
+      "applicantId": "110101199202022345",
+      "applicantPhone": "13800138002",
+      "materials": [
+        {
+          "materialId": "seed-mat-005",
+          "status": "uploaded",
+          "uploadTime": "2026-06-06T10:00:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-006",
+          "status": "uploaded",
+          "uploadTime": "2026-06-06T10:05:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-007",
+          "status": "not_uploaded",
+          "tolerateDeadline": "2026-06-08T17:00:00.000Z"
+        }
+      ],
+      "status": "green_channel",
+      "createTime": "2026-06-06T10:10:00.000Z",
+      "deadline": "2026-06-06T18:00:00.000Z",
+      "priority": "orange",
+      "remark": "绿色通道办理"
+    },
+    {
+      "id": "seed-app-003",
+      "itemId": "seed-item-003",
+      "applicantName": "王五",
+      "applicantId": "110101198803033456",
+      "applicantPhone": "13800138003",
+      "materials": [
+        {
+          "materialId": "seed-mat-008",
+          "status": "uploaded",
+          "uploadTime": "2026-06-06T11:00:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-009",
+          "status": "uploaded",
+          "uploadTime": "2026-06-06T11:10:00.000Z"
+        },
+        {
+          "materialId": "seed-mat-010",
+          "status": "not_uploaded",
+          "tolerateDeadline": "2026-06-13T17:00:00.000Z"
+        }
+      ],
+      "status": "green_channel",
+      "createTime": "2026-06-06T11:15:00.000Z",
+      "deadline": "2026-06-07T11:00:00.000Z",
+      "priority": "yellow",
+      "remark": "绿色通道办理"
+    }
+  ]
+}
